@@ -10,8 +10,6 @@ class Conversation:
         self.recognizer = speech_recognition.Recognizer()
         self.groq_client = GroqClient()
 
-        self.listen()
-
     def listen(self):
         print("Started listening...")
 
@@ -34,7 +32,6 @@ class Conversation:
                 except speech_recognition.RequestError as e:
                     print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
-                print(text)
 
     def respond(self, text):
         res = self.groq_client.get_text_response("You are a conversational droid.", text)

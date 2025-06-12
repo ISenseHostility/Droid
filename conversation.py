@@ -1,6 +1,7 @@
-import speech_recognition
-from groq_client import get_text_response
 import pyttsx3
+import speech_recognition
+
+from groq_client import get_text_response
 
 recognizer = speech_recognition.Recognizer()
 

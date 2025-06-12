@@ -1,14 +1,15 @@
 import sys
 from threading import Thread
-from vision import init_vision
+
 from conversation import init_conversation
+from vision import init_vision
 
 threads = []
 
 
 def main():
     vision_thread = Thread(target=init_vision)
-    # conversation_thread = Thread(target=init_conversation)
+    conversation_thread = Thread(target=init_conversation)
 
     vision_thread.daemon = True
     # conversation_thread.daemon = True

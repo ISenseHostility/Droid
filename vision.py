@@ -1,6 +1,7 @@
-import cv2
-import time
 from collections import deque
+
+import cv2
+
 
 def average_bbox(bbox_history):
     """Compute the average bounding box from recent history."""

@@ -1,43 +1,48 @@
 import pyttsx3
 import speech_recognition
 
-from groq_client import get_text_response
-
-recognizer = speech_recognition.Recognizer()
+from groq_client import GroqClient
 
 
-def speak_text(text):
-    engine = pyttsx3.init()
-    engine.say(text)
-    engine.runAndWait()
-    engine.stop()
-    print("Speak Text:", text)
+class Conversation:
+    def __init__(self):
+        self.engine = pyttsx3.init()
+        self.recognizer = speech_recognition.Recognizer()
+        self.groq_client = GroqClient()
 
+        self.listen()
 
-def init_conversation():
-    print("Initializing conversation...")
+    def listen(self):
+        print("Started listening...")
 
-    while True:
-        with speech_recognition.Microphone() as source:
-            recognizer.adjust_for_ambient_noise(source, duration=0.5)
-            audio = recognizer.listen(source)
+        while True:
+            with speech_recognition.Microphone() as source:
+                self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
+                audio = self.recognizer.listen(source)
 
-            try:
-                print("Listening...")
-                text = recognizer.recognize_sphinx(audio)
-                text = text.lower()
+                try:
+                    print("Recognizing...")
+                    text = self.recognizer.recognize_google(audio)
+                    text = text.lower()
 
-                print("User:" + text)
+                    print("User:" + text)
 
-                res = get_text_response("You are a conversational droid.", text)
+                    self.respond(text)
 
-                print("Droid:" + res)
+                except speech_recognition.UnknownValueError:
+                    print("Speech recognition could not understand your audio")
+                except speech_recognition.RequestError as e:
+                    print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
-                speak_text(res)
+                print(text)
 
-            except speech_recognition.UnknownValueError:
-                print("Speech recognition could not understand your audio")
-            except speech_recognition.RequestError as e:
-                print("Could not request results from Google Speech Recognition service; {0}".format(e))
+    def respond(self, text):
+        res = self.groq_client.get_text_response("You are a conversational droid.", text)
 
-            print(text)
+        print("Droid:" + res)
+
+        self.speak(res)
+
+    def speak(self, text):
+        self.engine.say(text)
+        self.engine.runAndWait()

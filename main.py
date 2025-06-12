@@ -1,29 +1,25 @@
-import sys
 from threading import Thread
 
-from conversation import init_conversation
-from vision import init_vision
-
-threads = []
+from conversation import Conversation
 
 
-def main():
-    vision_thread = Thread(target=init_vision)
-    conversation_thread = Thread(target=init_conversation)
+class Droid:
+    def __init__(self):
+        self.threads = []
+        self.conversation = Conversation()
 
-    vision_thread.daemon = True
-    # conversation_thread.daemon = True
+    def start(self):
+        # vision_thread = Thread(target=init_vision)
+        conversation_thread = Thread(target=self.conversation)
 
-    threads.append(vision_thread)
-    # threads.append(conversation_thread)
+        # vision_thread.daemon = True
+        conversation_thread.daemon = True
 
-    for thread in threads:
-        thread.start()
+        # threads.append(vision_thread)
+        self.threads.append(conversation_thread)
 
-    while True:
-        if 0xFF == ord('q'):
-            sys.exit(0)
+        for thread in self.threads:
+            thread.start()
 
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    Droid()

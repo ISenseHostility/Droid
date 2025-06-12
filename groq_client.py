@@ -1,21 +1,23 @@
 from groq import Groq
 
-client = Groq()
 
+class GroqClient:
+    def __init__(self):
+        self.client = Groq()
 
-def get_text_response(systemMessage, userMessage):
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "system",
-                "content": systemMessage
-            },
-            {
-                "role": "user",
-                "content": userMessage,
-            }
-        ],
-        model="meta-llama/llama-4-maverick-17b-128e-instruct",
-    )
+    def get_text_response(self, system_message, user_message):
+        chat_completion = self.client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_message
+                },
+                {
+                    "role": "user",
+                    "content": user_message,
+                }
+            ],
+            model="llama-3.1-8b-instant",
+        )
 
-    return chat_completion.choices[0].message.content
+        return chat_completion.choices[0].message.content

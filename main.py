@@ -1,25 +1,27 @@
 from threading import Thread
-
 from conversation import Conversation
-
+from vision import Vision
 
 class Droid:
     def __init__(self):
         self.threads = []
         self.conversation = Conversation()
+        self.vision = Vision()
 
     def start(self):
-        # vision_thread = Thread(target=init_vision)
-        conversation_thread = Thread(target=self.conversation)
+        conversation_thread = Thread(target=self.conversation.listen)
+        vision_thread = Thread(target=self.vision.detect_and_track)
 
-        # vision_thread.daemon = True
         conversation_thread.daemon = True
+        vision_thread.daemon = True
 
-        # threads.append(vision_thread)
-        self.threads.append(conversation_thread)
+        self.threads.extend([conversation_thread, vision_thread])
 
         for thread in self.threads:
             thread.start()
 
+        for thread in self.threads:
+            thread.join()
+
 if __name__ == '__main__':
-    Droid()
+    Droid().start()

@@ -20,6 +20,8 @@ class Vision:
         self.cap = cv2.VideoCapture(self.cam_index)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.frame_width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.frame_height)
+        if not self.cap.isOpened():
+            raise RuntimeError(f"Could not open camera index {self.cam_index}")
 
         self.tracker = None
         self.tracking = False

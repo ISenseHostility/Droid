@@ -10,11 +10,19 @@ logger = logging.getLogger(__name__)
 class Vision:
     """Detects faces in a video stream and tracks their position."""
 
-    def __init__(self, cam_index=0, frame_width=320, frame_height=240):
-        """Initialize camera settings and tracking state."""
+    def __init__(self, cam_index=0, frame_width=320, frame_height=240, stop_event=None):
+        """Initialize camera settings and tracking state.
+
+        Parameters
+        ----------
+        stop_event : threading.Event, optional
+            Event used to signal when the vision loop should terminate.
+        """
         self.cam_index = cam_index
         self.frame_width = frame_width
         self.frame_height = frame_height
+        # Event used to stop the capture loop gracefully
+        self.stop_event = stop_event
 
         self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
         self.cap = cv2.VideoCapture(self.cam_index)
@@ -41,7 +49,10 @@ class Vision:
             return
 
         logger.info("Vision system started...")
-        while self.cap.isOpened():
+        while (
+            self.cap.isOpened()
+            and (self.stop_event is None or not self.stop_event.is_set())
+        ):
             ret, frame = self.cap.read()
             if not ret:
                 break
@@ -58,6 +69,7 @@ class Vision:
             cv2.waitKey(1)
 
         self._release_resources()
+        logger.info("Vision system stopped")
 
     # 3. Handle Face Tracking Logic
     def _process_tracking(self, frame, frame_display):

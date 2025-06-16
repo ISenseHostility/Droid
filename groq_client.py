@@ -22,7 +22,8 @@ class GroqClient:
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             logger.error(
-                "GROQ_API_KEY environment variable is not set. API requests will fail."
+                "GROQ_API_KEY environment variable is not set. "
+                "API requests will fail."
             )
         self.client = Groq(api_key=api_key) if api_key else Groq()
         self.model = model

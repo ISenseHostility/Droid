@@ -14,7 +14,9 @@ def test_custom_model(monkeypatch):
 
     class DummyChat:
         def __init__(self):
-            self.completions = SimpleNamespace(create=MagicMock(return_value=dummy_response))
+            self.completions = SimpleNamespace(
+                create=MagicMock(return_value=dummy_response)
+            )
 
     class DummyGroq:
         def __init__(self, api_key=None):

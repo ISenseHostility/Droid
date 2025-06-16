@@ -12,7 +12,12 @@ logger = logging.getLogger(__name__)
 class Conversation:
     """Handle voice input and output for chatting with the user."""
 
-    def __init__(self, stop_event=None, system_prompt="You are a conversational droid.", groq_model="llama-3.1-8b-instant"):
+    def __init__(
+        self,
+        stop_event=None,
+        system_prompt="You are a conversational droid.",
+        groq_model="llama-3.1-8b-instant",
+    ):
         """Initialize the text-to-speech engine, recognizer and Groq client.
 
         Parameters
@@ -54,15 +59,17 @@ class Conversation:
                     self.respond(text)
 
                 except speech_recognition.UnknownValueError:
-                    logger.error("Speech recognition could not understand your audio")
+                    logger.error(
+                        "Speech recognition could not understand your audio"
+                    )
                 except speech_recognition.RequestError as e:
                     logger.error(
-                        "Could not request results from Google Speech Recognition service; %s",
+                        "Could not request results from Google Speech "
+                        "Recognition service; %s",
                         e,
                     )
 
         logger.info("Stopped listening")
-
 
     def respond(self, text):
         """Get a text response from the Groq model and speak it."""

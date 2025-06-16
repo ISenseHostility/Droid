@@ -1,14 +1,20 @@
+"""Entry point for running the droid's conversation and vision threads."""
+
 from threading import Thread
 from conversation import Conversation
 from vision import Vision
 
 class Droid:
+    """Coordinates the conversation and vision subsystems."""
+
     def __init__(self):
+        """Create subsystem instances and storage for threads."""
         self.threads = []
         self.conversation = Conversation()
         self.vision = Vision()
 
     def start(self):
+        """Launch conversation and vision threads."""
         conversation_thread = Thread(target=self.conversation.listen)
         vision_thread = Thread(target=self.vision.detect_and_track)
 

@@ -1,8 +1,13 @@
+"""Face detection and tracking utilities for the droid's camera."""
+
 import cv2
 from collections import deque
 
 class Vision:
+    """Detects faces in a video stream and tracks their position."""
+
     def __init__(self, cam_index=0, frame_width=320, frame_height=240):
+        """Initialize camera settings and tracking state."""
         self.cam_index = cam_index
         self.frame_width = frame_width
         self.frame_height = frame_height
@@ -19,12 +24,14 @@ class Vision:
 
     # 1. Helper: Calculate Average Bounding Box for Smoother Tracking
     def average_bbox(self):
+        """Return the average of recent bounding boxes."""
         n = len(self.bbox_history)
         avg = [sum(coord[i] for coord in self.bbox_history) / n for i in range(4)]
         return tuple(map(int, avg))
 
     # 2. Main Entry Point: Vision Loop
     def detect_and_track(self):
+        """Continuously capture frames and track detected faces."""
         if not self.cap.isOpened():
             print("Could not open camera")
             return
@@ -50,6 +57,7 @@ class Vision:
 
     # 3. Handle Face Tracking Logic
     def _process_tracking(self, frame, frame_display):
+        """Update the tracker and draw bounding boxes."""
         success, bbox = self.tracker.update(frame)
         self.frame_count += 1
 
@@ -67,6 +75,7 @@ class Vision:
 
     # 4. Handle Face Detection and Tracker Initialization
     def _detect_face(self, frame):
+        """Detect a face and start a new tracker if found."""
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         small_gray = cv2.resize(gray, (0, 0), fx=0.5, fy=0.5)
         faces = self.face_cascade.detectMultiScale(
@@ -79,16 +88,19 @@ class Vision:
 
     # 5. Draw Bounding Box on Frame
     def _draw_bbox(self, frame_display, bbox):
+        """Draw a rectangle around the tracked face."""
         x, y, w, h = bbox
         cv2.rectangle(frame_display, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
     # 6. Display Position Text on Frame
     def _draw_position_text(self, frame_display, position):
+        """Write the current face position on the frame."""
         cv2.putText(frame_display, f"Position: {position} Frame: {self.frame_count}", (10, 230),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
     # 7. Determine Face Position in Frame
     def _determine_position(self, frame, bbox):
+        """Determine if the face is left, center or right in the frame."""
         frame_width = frame.shape[1]
         x, y, w, h = bbox
         center_x = x + w // 2
@@ -101,19 +113,23 @@ class Vision:
 
     # 8. Show Frame
     def _display_frame(self, frame_display):
+        """Show the annotated video frame."""
         cv2.imshow("Smart Face Tracker", frame_display)
 
     # 9. Update Bounding Box History for Smoothing
     def _update_bbox_history(self, bbox):
+        """Add the latest bounding box to the smoothing history."""
         self.bbox_history.append(bbox)
 
     # 10. Scale Bounding Box Back to Original Size
     def _scale_bbox(self, bbox):
+        """Convert a small bounding box back to full resolution."""
         x, y, w, h = bbox
         return (x * 2, y * 2, w * 2, h * 2)
 
     # 11. Initialize the Face Tracker
     def _init_tracker(self, frame, bbox):
+        """Initialize a new tracker around the detected face."""
         self.tracker = cv2.TrackerCSRT_create()
         self.tracker.init(frame, bbox)
         self.tracking = True
@@ -123,10 +139,12 @@ class Vision:
 
     # 12. Reset Tracker State
     def _reset_tracker(self):
+        """Reset tracking state when a face is lost."""
         self.tracking = False
         self.tracker = None
 
     # 13. Release Resources at End
     def _release_resources(self):
+        """Release camera resources and close windows."""
         self.cap.release()
         cv2.destroyAllWindows()

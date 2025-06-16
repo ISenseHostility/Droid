@@ -1,11 +1,17 @@
+"""Wrapper around the Groq SDK used to generate chat responses."""
+
 from groq import Groq
 
 
 class GroqClient:
+    """Simple client used to request completions from Groq."""
+
     def __init__(self):
+        """Instantiate the underlying Groq client."""
         self.client = Groq()
 
     def get_text_response(self, system_message, user_message):
+        """Return Groq's response for a given user message."""
         chat_completion = self.client.chat.completions.create(
             messages=[
                 {

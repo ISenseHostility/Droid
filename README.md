@@ -19,3 +19,26 @@ Run the droid with:
 ```bash
 python main.py
 ```
+
+### Customizing prompts and models
+
+`Conversation` allows overriding the system prompt and the Groq model used for
+completions. Defaults match the previous behaviour:
+
+```python
+from conversation import Conversation
+
+# Use a custom prompt and model
+conv = Conversation(
+    system_prompt="You are a helpful robot.",
+    groq_model="llama-3.1-8b-instant",
+)
+```
+
+`GroqClient` can also be instantiated directly with a custom model:
+
+```python
+from groq_client import GroqClient
+
+client = GroqClient(model="llama-3.1-8b-instant")
+```

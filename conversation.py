@@ -36,7 +36,7 @@ class Conversation:
     def respond(self, text):
         res = self.groq_client.get_text_response("You are a conversational droid.", text)
 
-        print("Droid: " + res)
+        print(f"Droid: {res}")
 
         self.speak(res)
 

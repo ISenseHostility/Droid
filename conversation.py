@@ -55,10 +55,11 @@ class Conversation:
 
         logger.info("Stopped listening")
 
-
     def respond(self, text):
         """Get a text response from the Groq model and speak it."""
-        res = self.groq_client.get_text_response("You are a conversational droid.", text)
+        res = self.groq_client.get_text_response(
+            "You are a conversational droid.", text
+        )
 
         logger.info("Droid: %s", res)
 

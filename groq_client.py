@@ -23,14 +23,11 @@ class GroqClient:
         """Return Groq's response for a given user message."""
         chat_completion = self.client.chat.completions.create(
             messages=[
-                {
-                    "role": "system",
-                    "content": system_message
-                },
+                {"role": "system", "content": system_message},
                 {
                     "role": "user",
                     "content": user_message,
-                }
+                },
             ],
             model="llama-3.1-8b-instant",
         )

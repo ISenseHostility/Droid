@@ -8,6 +8,7 @@ from vision import Vision
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class Droid:
     """Coordinates the conversation and vision subsystems."""
 
@@ -44,5 +45,6 @@ class Droid:
         finally:
             logger.info("Droid stopped")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     Droid().start()

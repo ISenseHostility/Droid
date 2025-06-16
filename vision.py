@@ -3,9 +3,11 @@
 import logging
 from collections import deque
 
+
 import cv2
 
 logger = logging.getLogger(__name__)
+
 
 class Vision:
     """Detects faces in a video stream and tracks their position."""
@@ -24,7 +26,9 @@ class Vision:
         # Event used to stop the capture loop gracefully
         self.stop_event = stop_event
 
-        self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        self.face_cascade = cv2.CascadeClassifier(
+            cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+        )
         self.cap = cv2.VideoCapture(self.cam_index)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.frame_width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.frame_height)
@@ -51,9 +55,8 @@ class Vision:
             return
 
         logger.info("Vision system started...")
-        while (
-            self.cap.isOpened()
-            and (self.stop_event is None or not self.stop_event.is_set())
+        while self.cap.isOpened() and (
+            self.stop_event is None or not self.stop_event.is_set()
         ):
             ret, frame = self.cap.read()
             if not ret:
@@ -113,8 +116,15 @@ class Vision:
     # 6. Display Position Text on Frame
     def _draw_position_text(self, frame_display, position):
         """Write the current face position on the frame."""
-        cv2.putText(frame_display, f"Position: {position} Frame: {self.frame_count}", (10, 230),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(
+            frame_display,
+            f"Position: {position} Frame: {self.frame_count}",
+            (10, 230),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (255, 255, 255),
+            1,
+        )
 
     # 7. Determine Face Position in Frame
     def _determine_position(self, frame, bbox):

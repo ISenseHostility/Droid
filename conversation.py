@@ -29,7 +29,7 @@ class Conversation:
                     text = self.recognizer.recognize_google(audio)
                     text = text.lower()
 
-                    print("User:" + text)
+                    print("User: " + text)
 
                     self.respond(text)
 
@@ -43,7 +43,7 @@ class Conversation:
         """Get a text response from the Groq model and speak it."""
         res = self.groq_client.get_text_response("You are a conversational droid.", text)
 
-        print("Droid:" + res)
+        print(f"Droid: {res}")
 
         self.speak(res)
 

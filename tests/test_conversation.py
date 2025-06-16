@@ -3,8 +3,6 @@ import sys
 from types import ModuleType
 from unittest.mock import MagicMock
 
-import pytest
-
 
 def setup_fake_modules(monkeypatch):
     fake_pyttsx3 = ModuleType("pyttsx3")
@@ -15,6 +13,7 @@ def setup_fake_modules(monkeypatch):
     fake_sr.Microphone = MagicMock()
 
     fake_gc_mod = ModuleType("groq_client")
+
     class DummyGroqClient:
         def __init__(self, model="llama-3.1-8b-instant"):
             self.model = model

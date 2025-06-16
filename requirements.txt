@@ -4,3 +4,4 @@ opencv-python
 groq
 numpy
 pytest
+flake8

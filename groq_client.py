@@ -1,6 +1,9 @@
 """Wrapper around the Groq SDK used to generate chat responses."""
 
+import logging
 from groq import Groq
+
+logger = logging.getLogger(__name__)
 
 
 class GroqClient:

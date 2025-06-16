@@ -1,8 +1,12 @@
 """Entry point for running the droid's conversation and vision threads."""
 
+import logging
 from threading import Thread
 from conversation import Conversation
 from vision import Vision
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class Droid:
     """Coordinates the conversation and vision subsystems."""
@@ -15,6 +19,7 @@ class Droid:
 
     def start(self):
         """Launch conversation and vision threads."""
+        logger.info("Starting droid")
         conversation_thread = Thread(target=self.conversation.listen)
         vision_thread = Thread(target=self.vision.detect_and_track)
 

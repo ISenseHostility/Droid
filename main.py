@@ -1,7 +1,7 @@
 """Entry point for running the droid's conversation and vision threads."""
 
 import logging
-from threading import Thread
+from threading import Thread, Event
 from conversation import Conversation
 from vision import Vision
 
@@ -14,8 +14,10 @@ class Droid:
     def __init__(self):
         """Create subsystem instances and storage for threads."""
         self.threads = []
-        self.conversation = Conversation()
-        self.vision = Vision()
+        # Shared event that signals all threads to shut down gracefully
+        self.stop_event = Event()
+        self.conversation = Conversation(stop_event=self.stop_event)
+        self.vision = Vision(stop_event=self.stop_event)
 
     def start(self):
         """Launch conversation and vision threads."""
@@ -31,8 +33,16 @@ class Droid:
         for thread in self.threads:
             thread.start()
 
-        for thread in self.threads:
-            thread.join()
+        try:
+            for thread in self.threads:
+                thread.join()
+        except KeyboardInterrupt:
+            logger.info("Shutdown requested by user")
+            self.stop_event.set()
+            for thread in self.threads:
+                thread.join()
+        finally:
+            logger.info("Droid stopped")
 
 if __name__ == '__main__':
     Droid().start()

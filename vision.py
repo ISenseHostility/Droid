@@ -1,7 +1,11 @@
 """Face detection and tracking utilities for the droid's camera."""
 
-import cv2
+import logging
 from collections import deque
+
+import cv2
+
+logger = logging.getLogger(__name__)
 
 class Vision:
     """Detects faces in a video stream and tracks their position."""
@@ -33,10 +37,10 @@ class Vision:
     def detect_and_track(self):
         """Continuously capture frames and track detected faces."""
         if not self.cap.isOpened():
-            print("Could not open camera")
+            logger.error("Could not open camera")
             return
 
-        print("Vision system started...")
+        logger.info("Vision system started...")
         while self.cap.isOpened():
             ret, frame = self.cap.read()
             if not ret:
@@ -70,7 +74,7 @@ class Vision:
             if self.frame_count % 30 == 0:
                 self._reset_tracker()
         else:
-            print("Tracking lost. Re-detecting...")
+            logger.info("Tracking lost. Re-detecting...")
             self._reset_tracker()
 
     # 4. Handle Face Detection and Tracker Initialization

@@ -1,9 +1,12 @@
 """Speech-based conversation interface for interacting with the Groq API."""
 
+import logging
 import pyttsx3
 import speech_recognition
 
 from groq_client import GroqClient
+
+logger = logging.getLogger(__name__)
 
 
 class Conversation:
@@ -17,7 +20,7 @@ class Conversation:
 
     def listen(self):
         """Continuously listen to the microphone and respond."""
-        print("Started listening...")
+        logger.info("Started listening...")
 
         while True:
             with speech_recognition.Microphone() as source:
@@ -25,25 +28,28 @@ class Conversation:
                 audio = self.recognizer.listen(source)
 
                 try:
-                    print("Recognizing...")
+                    logger.info("Recognizing...")
                     text = self.recognizer.recognize_google(audio)
                     text = text.lower()
 
-                    print("User: " + text)
+                    logger.info("User: %s", text)
 
                     self.respond(text)
 
                 except speech_recognition.UnknownValueError:
-                    print("Speech recognition could not understand your audio")
+                    logger.error("Speech recognition could not understand your audio")
                 except speech_recognition.RequestError as e:
-                    print("Could not request results from Google Speech Recognition service; {0}".format(e))
+                    logger.error(
+                        "Could not request results from Google Speech Recognition service; %s",
+                        e,
+                    )
 
 
     def respond(self, text):
         """Get a text response from the Groq model and speak it."""
         res = self.groq_client.get_text_response("You are a conversational droid.", text)
 
-        print(f"Droid: {res}")
+        logger.info("Droid: %s", res)
 
         self.speak(res)
 

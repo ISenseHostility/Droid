@@ -90,14 +90,13 @@ class Vision:
     # 7. Determine Face Position in Frame
     def _determine_position(self, frame, bbox):
         frame_width = frame.shape[1]
-        x, y, w, h = bbox
+        x, _, w, _ = bbox
         center_x = x + w // 2
         if center_x < frame_width / 3:
             return "LEFT"
-        elif center_x < 2 * frame_width / 3:
+        if center_x < 2 * frame_width / 3:
             return "CENTER"
-        else:
-            return "RIGHT"
+        return "RIGHT"
 
     # 8. Show Frame
     def _display_frame(self, frame_display):
@@ -114,7 +113,11 @@ class Vision:
 
     # 11. Initialize the Face Tracker
     def _init_tracker(self, frame, bbox):
-        self.tracker = cv2.TrackerCSRT_create()
+        if hasattr(cv2, "TrackerCSRT_create"):
+            self.tracker = cv2.TrackerCSRT_create()
+        else:
+            # OpenCV >= 4.5 moves trackers under the legacy module
+            self.tracker = cv2.legacy.TrackerCSRT_create()
         self.tracker.init(frame, bbox)
         self.tracking = True
         self.frame_count = 0

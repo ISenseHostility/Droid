@@ -1,6 +1,5 @@
 import numpy as np
 from collections import deque
-from unittest.mock import MagicMock
 
 import cv2
 from vision import Vision

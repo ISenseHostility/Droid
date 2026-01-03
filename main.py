@@ -5,7 +5,7 @@ from vision import Vision
 class Droid:
     def __init__(self):
         self.threads = []
-        self.conversation = Conversation()
+        self.conversation = Conversation(2)
         self.vision = Vision()
 
     def start(self):
